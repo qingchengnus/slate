@@ -1,14 +1,8 @@
 ---
-title: API Reference
+title: Crave API Reference
 
 language_tabs:
-  - shell
-  - ruby
-  - python
-
-toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a>
+  - Elaboration
 
 includes:
   - errors
@@ -18,151 +12,100 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Crave API! You can use our API to access Crave API endpoints.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+# Authorization
 
-This example API documentation page was created with [Slate](http://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+```auth_token``` is required for protected resources access. To access protected resources,
+make sure to include ```auth_token``` in HTTP ```Authorization``` field.
 
-# Authentication
+> HTTP token authentication is used:
 
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+```http
+POST /api/endpoint HTTP/1.1
+Host: localhost:3000
+Authorization: this_is_token
 ```
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+Authorization: this_is_token
 </aside>
 
-# Kittens
+# Posts
 
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Isis",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
+## Request Post list for app's main page
 
 ### HTTP Request
+GET /posts.json
 
-`GET http://example.com/api/kittens`
+>Sample HTTP Request
 
-### Query Parameters
+```http
+GET /teachers/posts.json?start_id=26
+```
 
-Parameter | Default | Description
+### Query Parameter
+
+Parameter | Type | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+start_id(optional) | int | only retrieve posts before the start_id(excluding), without this parameter, newest 20 posts will be returned
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
 
-## Get a Specific Kitten
+### Return
+Fail: 400 bad request
+Success: A JSON data with format.
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-> The above command returns JSON structured like this:
+>Sample Return Data
 
 ```json
 {
-  "id": 2,
-  "name": "Isis",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+    "posts": [
+        {
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU4StnpPOOh4t4roN5impIzctYo6DG_63UT5mGFvFbeYMQNUONRw",
+            "dish_name": "Tomyam Soup",
+            "review": "Yummy!",
+            "created_at": "2015-08-27T06:18:03.862Z",
+            "updated_at": "2015-08-27T06:18:03.862Z",
+            "post_id": 1,
+            "rating": 4.5,
+            "poster": "qing",
+            "phone_number": "021 84900876",
+            "address": "Jl. Caman Raya, Pondok Gede, BekasiIndonesia",
+            "restaurant_name": "Chicken's Fe",
+            "cost": "Rp70.000 for two people (approx.)CashCards accepted",
+            "crave": 4,
+            "price": 20,
+            "style": "Thai",
+            "latitude": -6.2635,
+            "longitude": 106.9455,
+            "tags": [
+                {
+                    "name": "spicy"
+
+                },
+
+                {
+                    "name": "sichuan"
+                }
+            
+            ],
+            "comments": [
+
+                {
+
+                    "poster": "qing",
+                    "content": "I want to eat!"
+                
+                },
+
+                {
+                    "poster": "qing",
+                    "content": "Disbanderino!"
+                }
+            ]
+        }
+    ]
+
 }
 ```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">If you're not using an administrator API key, note that some kittens will return 403 Forbidden if they are hidden for admins only.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
